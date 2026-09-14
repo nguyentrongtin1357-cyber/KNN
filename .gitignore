@@ -1,0 +1,10 @@
+# Python Cache
+__pycache__/
+*.py[cod]
+
+# IDE
+.vscode/
+.idea/
+
+# Large dataset raw folder if needed
+# OnlineNewsPopularity/

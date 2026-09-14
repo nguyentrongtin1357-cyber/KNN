@@ -1,0 +1,18 @@
+{
+  "dataset": "OnlineNewsPopularity",
+  "target": "popular (median shares threshold = 1400)",
+  "model": "CustomKNeighborsClassifier",
+  "n_neighbors": 35,
+  "metric": "manhattan",
+  "weights": "distance",
+  "threshold": 0.48,
+  "preprocessing": "CustomQuantileTransformer(normal)",
+  "feature_selection": "CustomSelectKBest(k=25)",
+  "metrics": {
+    "accuracy": 0.6608651784588221,
+    "precision": 0.6704244031830239,
+    "recall": 0.7168518080831955,
+    "f1_score": 0.6928612221587664,
+    "roc_auc": 0.7131848563213726
+  }
+}

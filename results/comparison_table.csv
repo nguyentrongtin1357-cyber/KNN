@@ -1,0 +1,5 @@
+﻿Vòng Lặp (Iteration),Mô Tả Thay Đổi,Accuracy,Precision,F1-Score,ROC-AUC
+Iter 1: Dummy Baseline,Dự đoán ngẫu nhiên / gán đa số nhãn 1,0.5336,0.5336,0.6959,0.5
+Iter 2: Standard Baseline KNN,"QuantileTransform + KBest(25) + KNN(K=5, Euclidean, Uniform)",0.6257,0.6493,0.6492,0.6629
+Iter 3: Feature Eng + GridSearch KNN,"Thêm biến tương tác + Best Params K=35, Manhattan, Distance",0.6573,0.6768,0.6808,0.7132
+Iter 4: Threshold Tuning (Final Best Model),Tinh chỉnh ngưỡng quyết định tau = 0.48 trên OOF,0.6609,0.6704,0.6929,0.7132
