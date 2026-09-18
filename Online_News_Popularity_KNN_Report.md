@@ -99,6 +99,7 @@
 ## 17. THỰC NGHIỆM HUẤN LUYỆN MÔ HÌNH (MODEL TRAINING & EXPERIMENTATION)
 * Thời gian huấn luyện: 0.6866 giây.
 * Thời gian dự đoán (7,929 bài test): 10.2175 giây.
+* **Đóng gói Model Weights & Siêu tham số tối ưu:** Đã xuất toàn bộ sang thư mục `weights/` gồm `knn_best_model.joblib`, `best_params.json` ($K=35, \tau=0.48$), `selected_features.json`, `detailed_feature_weights.csv` và `detailed_feature_weights.json`.
 
 ---
 

@@ -23,6 +23,17 @@ Thư mục này lưu trữ toàn bộ **Model Weights**, **Siêu tham số tối
 3. **`selected_features.json`**
    - File JSON lưu danh sách tên 25 thuộc tính quan trọng nhất được thuật toán `SelectKBest` chọn lọc từ 60 thuộc tính ban đầu.
 
+4. **`detailed_feature_weights.csv`**
+   - Bảng biểu dạng CSV (mở trực tiếp bằng Excel) xếp hạng chi tiết cho toàn bộ 60 đặc trưng đầu vào:
+     - `Rank`: Thứ hạng độ quan trọng (từ 1 đến 60).
+     - `Feature`: Tên thuộc tính.
+     - `ANOVA_F_Score`: Điểm thống kê ANOVA F-value từ quá trình lọc đặc trưng `SelectKBest`.
+     - `Is_Selected_KBest`: Cờ xác nhận đặc trưng có lọt vào Top 25 huấn luyện mô hình hay không (`True`/`False`).
+     - `Permutation_Importance_Mean` & `Std`: Độ suy giảm ROC-AUC trung bình và độ lệch chuẩn khi xáo trộn thuộc tính trên tập kiểm thử.
+
+5. **`detailed_feature_weights.json`**
+   - Toàn bộ nội dung bảng trọng số 60 đặc trưng ở định dạng JSON để phục vụ tích hợp API, Web dashboard hoặc ứng dụng khác.
+
 ---
 
 ## 🚀 Cách Nạp Model Weights Để Dự Đoán (Python):
