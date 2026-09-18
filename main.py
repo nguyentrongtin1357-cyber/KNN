@@ -895,13 +895,66 @@ print(f"STD    | {cv_results_best['test_accuracy'].std():<12.4f} | {cv_results_b
     # --------------------------------------------------------------------------
     # BƯỚC 17: THỰC NGHIỆM HUẤN LUYỆN MÔ HÌNH (MODEL TRAINING & EXPERIMENTATION)
     # --------------------------------------------------------------------------
-    add_markdown(r"""## BƯỚC 17: THỰC NGHIỆM HUẤN LUYỆN MÔ HÌNH (MODEL TRAINING & EXPERIMENTATION)
+    add_markdown(r"""## BƯỚC 17: THỰC NGHIỆM HUẤN LUYỆN & LƯU FILE WEIGHTS (MODEL TRAINING & WEIGHTS SERIALIZATION)
 
-Đo lường thời gian huấn luyện và thời gian dự đoán thực tế của mô hình Best Tuned KNN.""")
+* Đo lường thời gian huấn luyện và thời gian dự đoán thực tế của mô hình Best Tuned KNN.
+* **Xuất file Weights & Model Artifacts:** Đóng gói toàn bộ mô hình tối ưu (`knn_best_model.joblib`) và lưu tham số tối ưu (`best_params.json`) vào thư mục `weights/` để phục vụ tái sử dụng và triển khai dự án.""")
 
-    add_code_and_run(r"""print("=== BƯỚC 17: THỜI GIAN THỰC THI HUẤN LUYỆN VÀ DỰ ĐOÁN ===")
+    add_code_and_run(r"""import joblib, json, os
+
+print("=== BƯỚC 17: THỜI GIAN THỰC THI HUẤN LUYỆN VÀ LƯU WEIGHTS CỦA MÔ HÌNH ===")
 print(f"Thời gian huấn luyện Best Tuned KNN: {t_best_train:.4f} giây")
-print(f"Thời gian dự đoán trên 7,929 bài test: {t_best_pred:.4f} giây")""")
+print(f"Thời gian dự đoán trên 7,929 bài test: {t_best_pred:.4f} giây")
+
+# Tạo thư mục weights
+os.makedirs('weights', exist_ok=True)
+
+# 1. Lưu Siêu tham số tối ưu dạng JSON
+best_params_export = {
+    'model_name': 'K-Nearest Neighbors (KNN Classifier)',
+    'dataset': 'UCI Online News Popularity',
+    'n_neighbors': int(best_params['n_neighbors']),
+    'metric': str(best_params['metric']),
+    'weights': str(best_params['weights']),
+    'n_features_selected': 25,
+    'decision_threshold': 0.48,
+    'feature_scaling': 'QuantileTransformer(normal)',
+    'evaluation_metrics': {
+        'accuracy': round(float(acc_best), 4),
+        'precision': round(float(prec_best), 4),
+        'recall': round(float(rec_best), 4),
+        'f1_score': round(float(f1_best), 4),
+        'roc_auc': round(float(auc_best), 4)
+    },
+    'execution_time': {
+        'training_time_sec': round(float(t_best_train), 4),
+        'inference_time_sec': round(float(t_best_pred), 4)
+    }
+}
+
+with open('weights/best_params.json', 'w', encoding='utf-8') as f:
+    json.dump(best_params_export, f, indent=4, ensure_ascii=False)
+
+# 2. Trích xuất danh sách 25 đặc trưng quan trọng được chọn
+sel_step = dict(pipe_best.steps)['select']
+selected_indices = sel_step.selected_indices_ if hasattr(sel_step, 'selected_indices_') and sel_step.selected_indices_ is not None else sel_step.get_support(indices=True)
+selected_feature_names = list(X.columns[selected_indices])
+
+with open('weights/selected_features.json', 'w', encoding='utf-8') as f:
+    json.dump(selected_feature_names, f, indent=4, ensure_ascii=False)
+
+# 3. Lưu toàn bộ Model Pipeline Weights
+joblib.dump(pipe_best, 'weights/knn_best_model.joblib')
+
+print("\n=> ĐÃ LƯU THÀNH CÔNG WEIGHTS VÀ THAM SỐ TỐI ƯU VÀO THƯ MỤC 'weights/':")
+print("  - [JSON]   weights/best_params.json       (Siêu tham số & chỉ số tối ưu)")
+print("  - [JSON]   weights/selected_features.json (Danh sách 25 thuộc tính quan trọng)")
+print("  - [JOBLIB] weights/knn_best_model.joblib  (Model Pipeline Weights)")
+
+# Thử nghiệm Load lại Weights
+loaded_model = joblib.load('weights/knn_best_model.joblib')
+sample_preds = (loaded_model.predict_proba(X_test.iloc[:5])[:, 1] >= 0.48).astype(int)
+print(f"\nKiểm thử Load Model Weights thành công! Dự đoán 5 mẫu thử: {sample_preds}")""")
 
     # --------------------------------------------------------------------------
     # BƯỚC 18: KIỂM ĐỊNH THỐNG KÊ ĐỘ TIN CẬY (STATISTICAL SIGNIFICANCE & CONFIDENCE)

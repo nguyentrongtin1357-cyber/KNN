@@ -121,10 +121,21 @@ class CustomSelectKBest:
     def fit_transform(self, X, y):
         return self.fit(X, y).transform(X)
 
+    def get_support(self, indices=False):
+        if indices:
+            return self.selected_indices_
+        mask = np.zeros(len(self.scores_), dtype=bool)
+        mask[self.selected_indices_] = True
+        return mask
+
 
 class CustomPipeline:
     def __init__(self, steps):
         self.steps = steps
+
+    @property
+    def named_steps(self):
+        return dict(self.steps)
 
     def fit(self, X, y=None):
         X_trans = X

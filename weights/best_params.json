@@ -1,0 +1,21 @@
+{
+    "model_name": "K-Nearest Neighbors (KNN Classifier)",
+    "dataset": "UCI Online News Popularity",
+    "n_neighbors": 35,
+    "metric": "manhattan",
+    "weights": "distance",
+    "n_features_selected": 25,
+    "decision_threshold": 0.48,
+    "feature_scaling": "QuantileTransformer(normal)",
+    "evaluation_metrics": {
+        "accuracy": 0.6609,
+        "precision": 0.6704,
+        "recall": 0.7169,
+        "f1_score": 0.6929,
+        "roc_auc": 0.7132
+    },
+    "execution_time": {
+        "training_time_sec": 0.4084,
+        "inference_time_sec": 6.818
+    }
+}
