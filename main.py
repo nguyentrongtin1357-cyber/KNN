@@ -1054,6 +1054,36 @@ print("=== BƯỚC 20: BẢNG TOP 15 THUỘC TÍNH QUAN TRỌNG NHẤT (PERMUTAT
 print(perm_df.to_string(index=False))
 print()
 
+# Xuất bảng trọng số đặc trưng chi tiết toàn bộ đặc trưng vào thư mục weights/
+sel_step = dict(pipe_best.steps)['select']
+f_scores = getattr(sel_step, 'scores_', np.zeros(X.shape[1]))
+selected_mask = np.zeros(X.shape[1], dtype=bool)
+if hasattr(sel_step, 'selected_indices_') and sel_step.selected_indices_ is not None:
+    selected_mask[sel_step.selected_indices_] = True
+
+all_perm_means = perm_imp.importances_mean
+all_perm_stds = perm_imp.importances_std
+
+detailed_weights_df = pd.DataFrame({
+    'Feature': X.columns,
+    'ANOVA_F_Score': f_scores,
+    'Is_Selected_KBest': selected_mask,
+    'Permutation_Importance_Mean': all_perm_means,
+    'Permutation_Importance_Std': all_perm_stds
+}).sort_values(by='Permutation_Importance_Mean', ascending=False)
+
+detailed_weights_df['Rank'] = range(1, len(detailed_weights_df) + 1)
+detailed_weights_df = detailed_weights_df[['Rank', 'Feature', 'ANOVA_F_Score', 'Is_Selected_KBest', 'Permutation_Importance_Mean', 'Permutation_Importance_Std']]
+
+os.makedirs('weights', exist_ok=True)
+detailed_weights_df.to_csv('weights/detailed_feature_weights.csv', index=False, encoding='utf-8-sig')
+detailed_weights_df.to_json('weights/detailed_feature_weights.json', orient='records', indent=4, force_ascii=False)
+
+print("=> ĐÃ XUẤT THÀNH CÔNG BẢNG TRỌNG SỐ ĐẶC TRƯNG CHI TIẾT VÀO DỰ ÁN:")
+print("  - File CSV : weights/detailed_feature_weights.csv")
+print("  - File JSON: weights/detailed_feature_weights.json")
+print()
+
 plt.figure(figsize=(10, 5.5))
 sns.barplot(x=top_means, y=top_feats, hue=top_feats, palette='viridis', legend=False)
 plt.title("Top 15 Thuộc Tính Quan Trọng Nhất Đối Với KNN (Permutation Importance)", fontsize=13, fontweight='bold')

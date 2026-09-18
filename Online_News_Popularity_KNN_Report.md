@@ -97,8 +97,8 @@
 ---
 
 ## 17. THỰC NGHIỆM HUẤN LUYỆN MÔ HÌNH (MODEL TRAINING & EXPERIMENTATION)
-* Thời gian huấn luyện: 0.4084 giây.
-* Thời gian dự đoán (7,929 bài test): 6.8180 giây.
+* Thời gian huấn luyện: 0.6866 giây.
+* Thời gian dự đoán (7,929 bài test): 10.2175 giây.
 
 ---
 

@@ -14,6 +14,7 @@ def load_model_and_predict(data_input=None):
     model_path = 'weights/knn_best_model.joblib'
     params_path = 'weights/best_params.json'
     features_path = 'weights/selected_features.json'
+    dt_weights_path = 'weights/detailed_feature_weights.csv'
     
     if not os.path.exists(model_path) or not os.path.exists(params_path):
         raise FileNotFoundError("Chưa tìm thấy file weights! Vui lòng chạy py main.py để huấn luyện và lưu weights.")
@@ -37,7 +38,14 @@ def load_model_and_predict(data_input=None):
     print(f"ROC-AUC Test Set   : {params['evaluation_metrics']['roc_auc']}")
     print("--------------------------------------------------------------------------------")
 
-    # 3. Thực hiện dự đoán trên dữ liệu đầu vào
+    # 3. Hiển thị Top 5 Trọng số đặc trưng chi tiết từ weights/detailed_feature_weights.csv nếu có
+    if os.path.exists(dt_weights_path):
+        dt_df = pd.read_csv(dt_weights_path)
+        print("TOP 5 TRỌNG SỐ ĐẶC TRƯNG QUAN TRỌNG NHẤT (Trích từ weights/detailed_feature_weights.csv):")
+        print(dt_df.head(5)[['Rank', 'Feature', 'ANOVA_F_Score', 'Permutation_Importance_Mean']].to_string(index=False))
+        print("--------------------------------------------------------------------------------")
+
+    # 4. Thực hiện dự đoán trên dữ liệu đầu vào
     if data_input is None:
         df = pd.read_csv('OnlineNewsPopularity/OnlineNewsPopularity.csv')
         df.columns = [c.strip() for c in df.columns]

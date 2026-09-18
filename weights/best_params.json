@@ -15,7 +15,7 @@
         "roc_auc": 0.7132
     },
     "execution_time": {
-        "training_time_sec": 0.4084,
-        "inference_time_sec": 6.818
+        "training_time_sec": 0.6866,
+        "inference_time_sec": 10.2175
     }
 }
